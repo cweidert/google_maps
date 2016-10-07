@@ -9,6 +9,8 @@ function initMap() {
 	});
 
 	makeMarkers(map, landmarks);
+	makeExamplePath(map, locations);
+	makeExamplePolygon(map, locations);
 	map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 }
 
@@ -41,13 +43,59 @@ function getLandmarks(locations) {
 	  },
 	  pier: {
 		  name: "Santa Monica Pier",
-		  subtitle: "nice and cool", 
+		  subtitle: "nice and cool",
 		  location: locations["santaMonicaPier"],
 		  icon: iconBase + "smpier24.png"
 	  }
 	}
 
 	return landmarks
+}
+
+function makeExamplePolygon(map, locations) {
+	var midWilshire = new google.maps.Polygon({
+		path: [
+			locations["beverlyHighland"],
+			locations["wilshireHighland"],
+			locations["highlandBend"],
+			locations["olympicHighland"],
+			locations["olympicBend"],
+			locations["olympicFairfax"],
+			locations["wilshireFairfax"],
+			locations["beverlyFairfax"],
+			locations["beverlyHighland"]
+		],
+		strokeColor: "#040",
+		strokeOpacity: .8,
+		strokeWeight: 2,
+		fillColor: "#080",
+		fillOpacity: .4
+	});
+	midWilshire.setMap(map);
+}
+
+function makeExamplePath(map, locations) {
+	var redLinePath = new google.maps.Polyline({
+		path: [
+			locations["unionStation"],
+			locations["grandParkStation"],
+			locations["pershingSquareStation"],
+			locations["seventhAndMetro"],
+			locations["westlakeStation"],
+			locations["wilshireVermontStation"],
+			locations["vermontBeverlyStation"],
+			locations["vermontSunsetStation"],
+			locations["hollywoodWesternStation"],
+			locations["hollywoodVineStation"],
+			locations["hollywoodHighlandStation"],
+			locations["universalCityStation"],
+			locations["northHollywoodStation"]
+		],
+		strokeColor: "#f00",
+		strokeOpacity: .5,
+		strokeWeight: 2
+	});
+	redLinePath.setMap(map);
 }
 
 function makeLegend(icons) {
@@ -88,18 +136,18 @@ function makeNewMarker(map, location, img) {
 
 function addCaption(map, marker, landmark, zoom = false) {
 	var message = landmark["name"] + ": " + landmark["subtitle"];
-	
+
 	var markerInfo = new google.maps.InfoWindow({
 		content: message
 	})
-	
+
 	google.maps.event.addListener(marker, 'click', function(event) {
 		markerInfo.open(map, marker);
 		if (zoom) {
 			var oldZoom = map.getZoom();
 			var oldCenter = map.getCenter();
 			var oldId = map.getMapTypeId();
-		
+
 			map.setZoom(18);
 			map.setMapTypeId("hybrid");
 			map.setCenter(marker.getPosition());
